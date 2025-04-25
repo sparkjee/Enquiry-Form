@@ -1,38 +1,16 @@
-import { MongoClient } from "mongodb";
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAfwU8_sRlzapwLl7shr6NeBrDp9m3Iay0",
+  authDomain: "sparkjee-913e5.firebaseapp.com",
+  databaseURL: "https://sparkjee-913e5.firebaseio.com",
+  projectId: "sparkjee-913e5",
+  storageBucket: "sparkjee-913e5.firebasestorage.app",
+  messagingSenderId: "209232786485",
+  appId: "1:209232786485:web:418322e17cafafb4a1ad7c"
+};
 
-const uri = process.env.MONGODB_URI;
-const client = new MongoClient(uri);
-const dbName = "sparkjee";
-const collectionName = "enquiries";
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
-  }
-
-  const { date, student_name, contact_number, course } = req.body;
-
-  if (!date || !student_name || !contact_number || !course) {
-    return res.status(400).json({ message: "Missing required fields" });
-  }
-
-  try {
-    await client.connect();
-    const db = client.db(dbName);
-    const collection = db.collection(collectionName);
-
-    const doc = {
-      date,
-      student_name,
-      contact_number,
-      course,
-      createdAt: new Date()
-    };
-
-    await collection.insertOne(doc);
-    return res.status(200).json({ message: "Enquiry submitted successfully" });
-  } catch (err) {
-    console.error("Error saving to DB:", err);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
-}
+// Reference to the database
+const database = firebase.database();
