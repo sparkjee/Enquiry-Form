@@ -14,3 +14,29 @@ firebase.initializeApp(firebaseConfig);
 
 // Reference to the database
 const database = firebase.database();
+
+document.getElementById('enquiryForm').addEventListener('submit', submitForm);
+
+function submitForm(e) {
+  e.preventDefault();
+
+  // Get values
+  const studentName = document.getElementById('studentName').value;
+  const contactNumber = document.getElementById('contactNumber').value;
+  const course = document.getElementById('course').value;
+
+  // Save data to Firebase
+  saveEnquiry(studentName, contactNumber, course);
+
+  // Clear form
+  document.getElementById('enquiryForm').reset();
+}
+
+function saveEnquiry(name, contact, course) {
+  const newEnquiryRef = database.ref('enquiries').push();
+  newEnquiryRef.set({
+    name: name,
+    contact: contact,
+    course: course
+  });
+}
